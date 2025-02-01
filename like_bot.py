@@ -1,17 +1,19 @@
 import os
 from telegram.ext import Updater, MessageHandler, Filters, CommandHandler, CallbackQueryHandler
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-
+from tinydb import TinyDB, Query
 
 TOKEN = os.environ['TOKEN']
 
+db = TinyDB('db.json',indent = 4)
 button_count = {'like': 0, 'dislike': 0}
 result = {}
 
 def button_callback(update: Update, context):
     query = update.callback_query
     user_id = query.from_user.id
-
+    user_name = query.from_user.username
+   
     l_d_count = result.get(user_id, None)
 
     if query.data == 'like':
@@ -27,6 +29,12 @@ def button_callback(update: Update, context):
         if l_d_count != 'dislike':
             button_count['dislike'] += 1
             result[user_id] = 'dislike'
+
+    User = Query()
+    if db.search(User.id == user_id):
+        db.update({'like': button_count['like'], 'dislike': button_count['dislike'], 'pressed_bitton': query.data}, User.id == user_id)
+    else:
+        db.insert({'id': user_id, 'username': user_name, 'like': button_count['like'], 'dislike': button_count['dislike'], 'pressed_bitton': query.data})
 
     inline_button = InlineKeyboardButton(text=f"👍 {button_count['like']}", callback_data='like')
     inline_button1 = InlineKeyboardButton(text=f"👎 {button_count['dislike']}", callback_data='dislike')

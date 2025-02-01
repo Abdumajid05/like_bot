@@ -1,0 +1,18 @@
+{
+    "_default": {
+        "1": {
+            "id": 5423257804,
+            "username": "abdumajid_05",
+            "like": 1,
+            "dislike": 0,
+            "pressed_bitton": "like"
+        },
+        "2": {
+            "id": 7256283202,
+            "username": null,
+            "like": 2,
+            "dislike": 0,
+            "pressed_bitton": "like"
+        }
+    }
+}
